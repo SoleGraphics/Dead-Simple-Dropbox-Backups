@@ -6,12 +6,11 @@ class Admin_Interface_Controller {
 	const SETTINGS_GROUP      = 'dropbox_backups_group';
 
 	private $plugin_settings = array(
-		'dropbox_drive_owner',
 		'sole_db_access_token',
-		'dropbox_db_backup_timestamp',
-		'dropbox_db_frequency',
-		'dropbox_uploads_backup_timestamp',
-		'dropbox_uploads_frequency',
+		'sole_dropbox_db_backup_timestamp',
+		'sole_dropbox_db_frequency',
+		'sole_dropbox_uploads_backup_timestamp',
+		'sole_dropbox_uploads_frequency',
 	);
 
 	private $backup_options = array(
@@ -48,7 +47,6 @@ class Admin_Interface_Controller {
 	}
 
 	public function display_settings_page() {
-		//$dropbox_controller = Dropbox_Controller::get_instance();
 		include plugin_dir_path( __DIR__ ) . 'templates/settings-form.php';
 	}
 

@@ -8,7 +8,7 @@
 	<p>Used <?php echo $usage['used']; ?> KB of <?php echo $usage['allocated']; ?> KB</p>
 	<form method="POST" action="options.php" enctype="multipart/form-data">
 		<?php settings_fields( self::SETTINGS_GROUP ); ?>
-		<?php do_settings_sections( 'sole-settings-page' ); ?>
+		<?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
 		<h2>Settings</h2>
 		<table>
 			<tr>
@@ -37,7 +37,7 @@
 			<tr>
 				<td>Uploads Backup Frequency</td>
 				<td><select name="sole_dropbox_uploads_frequency">
-					<?php $selected = get_option( 'sole_dropbox_db_frequency' ); ?>
+					<?php $selected = get_option( 'sole_dropbox_uploads_frequency' ); ?>
 					<?php foreach( $this->backup_options as $option ): ?>
 						<option value="<?php echo $option; ?>" <?php if($option == $selected){ echo 'selected="selected"'; } ?>><?php echo $option; ?></option>
 					<?php endforeach; ?>
