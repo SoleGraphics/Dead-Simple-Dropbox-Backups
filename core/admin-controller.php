@@ -4,6 +4,7 @@ class Admin_Interface_Controller {
 
 	const SETTINGS_PAGE_SLUG  = 'dropbox_backups_settings_page';
 	const SETTINGS_GROUP      = 'dropbox_backups_group';
+	const SETTINGS_NONCE_NAME = 'dropbox_backups_nonce_name';
 
 	private $plugin_settings = array(
 		'sole_db_access_token',
@@ -22,8 +23,15 @@ class Admin_Interface_Controller {
 	public function __construct() {
 		$this->table_controller = Sole_Dropbox_Logger::get_instance();
 
-		// Add the admin views
-		add_action( 'admin_menu', array( $this, 'add_admin_menu') );
+		// Need to add the admin views. Should be network settings if we're in a multisite.
+		if( is_multisite() ) {
+			add_action( 'network_admin_menu', array( $this, 'add_admin_menu') );
+			// Need to manually update the settings.
+			add_action( 'init', array( $this, 'check_options_updated' ) );
+		} else {
+			add_action( 'admin_menu', array( $this, 'add_admin_menu') );
+		}
+
 		add_action( 'admin_init', array( $this, 'register_plugin_settings') );
 	}
 
@@ -46,8 +54,28 @@ class Admin_Interface_Controller {
 		}
 	}
 
+	/**
+	 * Fallback for multisites to update the plugin options
+	 * (no options.php on multisite network).
+	 */
+	public function check_options_updated() {
+		if( isset( $_POST[self::SETTINGS_NONCE_NAME] ) &&
+			wp_verify_nonce( $_POST[self::SETTINGS_NONCE_NAME], 'dropbox_options' ) &&
+			is_admin() ) {
+			// Options are being updated, go through and save each.
+			foreach ( $this->plugin_settings as $setting ) {
+				$new_option_value = $_POST[$setting['slug']];
+				update_option( $setting['slug'], $new_option_value );
+			}
+		}
+	}
+
 	public function display_settings_page() {
-		include plugin_dir_path( __DIR__ ) . 'templates/settings-form.php';
+		if( is_multisite() ) {
+			include plugin_dir_path( __DIR__ ) . 'templates/multisite-settings-form.php';
+		} else {
+			include plugin_dir_path( __DIR__ ) . 'templates/settings-form.php';
+		}
 	}
 
 	public function display_logs() {
