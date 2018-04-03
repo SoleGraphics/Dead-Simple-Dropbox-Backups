@@ -64,8 +64,8 @@ class Admin_Interface_Controller {
 			is_admin() ) {
 			// Options are being updated, go through and save each.
 			foreach ( $this->plugin_settings as $setting ) {
-				$new_option_value = $_POST[$setting['slug']];
-				update_option( $setting['slug'], $new_option_value );
+				$new_option_value = $_POST[$setting];
+				update_option( $setting, $new_option_value );
 			}
 		}
 	}
