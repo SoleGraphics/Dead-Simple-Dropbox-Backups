@@ -175,6 +175,10 @@ class Dropbox_Controller {
         curl_close($ch);
 
         $data = json_decode( $raw_data );
+        if( empty( $data ) ) {
+            return false;
+        }
+
         return array(
         	'used'      => round($data->used / 1024),
         	'allocated' => round($data->allocation->allocated / 1024),
