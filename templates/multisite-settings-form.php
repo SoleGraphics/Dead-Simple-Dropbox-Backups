@@ -7,6 +7,7 @@
     <hr/>
     <p>Used <?php echo $usage['used']; ?> KB of <?php echo $usage['allocated']; ?> KB</p>
     <form method="POST" action="admin.php?page=dropbox_backups_settings_page" enctype="multipart/form-data">
+        <?php wp_nonce_field( 'dropbox_options', self::SETTINGS_NONCE_NAME ); ?>
         <?php settings_fields( self::SETTINGS_GROUP ); ?>
         <?php do_settings_sections( self::SETTINGS_PAGE_SLUG ); ?>
         <h2>Settings</h2>
